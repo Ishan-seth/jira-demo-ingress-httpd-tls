@@ -13,7 +13,9 @@ JIRA & Postgres DB Images provided by: Edison Wong, PantaRei Design: https://git
 
 ## Overview
 
-- This setup includes ingress and httpd.
+- This setup includes ingress & httpd which makes it more suitable as a starting point to create production-ready JIRA instance.
+- For a more simplfied demo (without ingress and httpd) please see: https://github.com/neil-n-brown/jira-demo.
+
 
 ## What Do We Need?
 

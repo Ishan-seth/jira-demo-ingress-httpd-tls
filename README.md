@@ -32,10 +32,6 @@ JIRA & Postgres DB Images provided by: Edison Wong, PantaRei Design: https://git
 
 ## Usage
 
-### Create Namesapce 
-
-If you wish to edit all your files to use a different namespace (default is "devops") then please note that Namespace must be created first to deploy the other configurations. Ensure namespace yaml filename is the first file that will be read when you run the kubectl apply -f command. e.g. add "00-" to beginning of yaml filename 
-
 
 ### Deploy JIRA to AKS Cluster
 

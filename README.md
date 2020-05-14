@@ -1,6 +1,6 @@
-# jira-demo
+# jira-demo-ingress-httpd-tls
 
-A demo JIRA deployment to Azure AKS including nginx ingress controller (for https/tls) and apache web server which improves the performance of the application.
+A demo JIRA deployment to Azure AKS including nginx ingress controller (for https/tls) and apache httpd web server (which improves the performance of the application).
 
 - NGINX Ingress 
 - Apache httpd web server

@@ -19,6 +19,7 @@ JIRA & Postgres DB Images provided by: Edison Wong, PantaRei Design: https://git
 
 ## What Do We Need?
 
+- Azure AKS Cluster
 - Nginx Ingress: https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-0.32.0/deploy/static/provider/cloud/deploy.yaml
 - 1 namespace:  00-devops-namespace.yml
 - Default Azure Storage Classes + 1 custom Storage Class for `var-lib-postgresql-data`. Custom storage class is required for Postgres as the default mount options for AzureDisk do not allow the Postgres user to write to the location.

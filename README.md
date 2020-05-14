@@ -19,7 +19,7 @@ JIRA & Postgres DB Images provided by: Edison Wong, PantaRei Design: https://git
 
 ## What Do We Need?
 
-- Nginx Ingress:  kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-0.32.0/deploy/static/provider/cloud/deploy.yaml
+- Nginx Ingress: https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-0.32.0/deploy/static/provider/cloud/deploy.yaml
 - 1 namespace:  00-devops-namespace.yml
 - Default Azure Storage Classes + 1 custom Storage Class for `var-lib-postgresql-data`. Custom storage class is required for Postgres as the default mount options for AzureDisk do not allow the Postgres user to write to the location.
 - Persistent Volume Claims for `var-lib-postgresql-data` (pvc-postgres-data.yaml) `var-atlassian-application-data-jira` (pvc-jira-data.yaml) and `var-atlassian-application-data-jira-shared` (pvc-jira-shared.yaml) directories.
@@ -36,6 +36,12 @@ JIRA & Postgres DB Images provided by: Edison Wong, PantaRei Design: https://git
 
 
 ### Deploy JIRA to AKS Cluster
+
+0) Deploy Nginx Ingress: 
+
+    kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-0.32.0/deploy/static/provider/cloud/deploy.yaml
+    
+    If you wish to use Internal IP for Ingress refer to:  https://docs.microsoft.com/en-us/azure/aks/ingress-internal-ip
 
 1) Ensure you are logged on to cluster:  az aks get-credentials --resource-group YourResourceGroup --name YourAKSCluster
 

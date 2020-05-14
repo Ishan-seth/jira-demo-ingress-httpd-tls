@@ -55,15 +55,15 @@ JIRA & Postgres DB Images provided by: Edison Wong, PantaRei Design: https://git
 
     svc-jira-cluster.yml >>> Decide if you wish to you Public IP or Internal Loadbalancer (see comments in the file for detais)
 
-    ingress-nginx.yml >>> Edit with your own cert details. To get the nginx controller up and running without https then comment out the highlighted lines and changes host to host: *
+    ingress-nginx.yml >>> Edit with your own cert details. To get the nginx controller up and running without https then comment out the highlighted lines and change host to host: *
 
 5) kubectl apply -Rf . >>> This command will apply all of your YAML files in the current directory
 
-6) kubectl -n devops get all  >>> This command will display all statefulsets, pods and services. You want to see all pods in a "running state" this may take several minutes while the images are downloaded etc.
+6) kubectl -n devops get all  >>> This command will display all statefulsets, pods and services. You want to see all pods in a "running state 1/1" this may take several minutes while the images are downloaded etc.
 
 7) Create DNS name and link it to the ip address of the NGINX Ingress Controller
 
-8) Create tls crt and key then convert them to a kubernetes secret (example on Windows 10 Git bash below - please remember to use your own details for /CN and /O)
+8) Create tls crt and key then convert them to a kubernetes secret (example on Windows 10 Git bash below - please remember to use your own details for /CN = yourdomainname and /O = your crt/key name)
 
     openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
         -out jira-demo-ingress-tls.crt \

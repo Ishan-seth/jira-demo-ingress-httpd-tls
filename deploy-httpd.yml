@@ -1,0 +1,45 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: httpd
+  namespace: devops
+  labels:
+    service: httpd
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: httpd
+  template:
+    metadata:
+      labels:
+        service: httpd
+    spec:
+      containers:
+        - name: httpd
+          image: docker.io/alvistack/httpd:2.4
+          resources:
+            requests:
+              cpu: 10m
+              memory: 32M
+            limits:
+              memory: 64M
+          workingDir: /var/www/html
+          ports:
+            - containerPort: 80
+          readinessProbe:
+            tcpSocket:
+              port: 80
+          livenessProbe:
+            tcpSocket:
+              port: 80
+            initialDelaySeconds: 30
+          volumeMounts:
+            - mountPath: /etc/apache2/sites-enabled/000-default.conf
+              name: etc-apache2-sites-enabled
+              subPath: 000-default.conf
+      volumes:
+        - name: etc-apache2-sites-enabled
+          configMap:
+            name: etc-apache2-sites-enabled

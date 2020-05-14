@@ -1,0 +1,17 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+  namespace: devops
+  annotations:
+    service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
+  labels:
+    service: postgres
+spec:
+  ports:
+    - name: postgres
+      port: 5432
+  selector:
+    service: postgres
+  clusterIP: None

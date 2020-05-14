@@ -1,0 +1,9 @@
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: var-lib-postgresql-data
+provisioner: kubernetes.io/azure-disk
+parameters:
+  skuName: Standard_LRS
+  kind: Managed
+  cachingmode: None

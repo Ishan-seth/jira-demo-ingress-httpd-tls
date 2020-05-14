@@ -1,0 +1,89 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres
+  namespace: devops
+  labels:
+    service: postgres
+spec:
+  serviceName: postgres
+  replicas: 1
+  updateStrategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      service: postgres
+  template:
+    metadata:
+      labels:
+        service: postgres
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: service
+                    operator: In
+                    values:
+                      - postgres
+              topologyKey: "kubernetes.io/hostname"
+      containers:
+        - name: postgres
+          image: docker.io/alvistack/postgres:11
+          imagePullPolicy: "IfNotPresent"
+          resources:
+            requests:
+              cpu: 250m
+              memory: 511M
+            limits:
+              memory: 512M
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres
+                  key: POSTGRES_PASSWORD
+            - name: POSTGRES_INITDB_ARGS
+              value: "--encoding=UTF8 --locale=en_US.utf8"
+            - name: PGDATABASE
+              value: "postgres"
+            - name: PGUSER
+              value: "postgres"
+          readinessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - gosu postgres pg_isready
+            failureThreshold: 60
+          livenessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - gosu postgres pg_isready
+            initialDelaySeconds: 60
+            failureThreshold: 60
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/
+              subPath: data
+              name: var-lib-postgresql-data
+      volumes:
+        - name: var-lib-postgresql-data
+          persistentVolumeClaim:
+            claimName: var-lib-postgresql-data
+  # volumeClaimTemplates:
+  #   - metadata:
+  #       name: var-lib-postgresql-data
+  #     spec:
+  #       accessModes:
+  #         - ReadWriteOnce
+  #       storageClassName: managed-premium  
+  #       resources:
+  #         requests:
+  #           storage: 10Gi
+          

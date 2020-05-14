@@ -1,0 +1,14 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-cluster
+  namespace: devops
+  labels:
+    service: postgres
+spec:
+  ports:
+    - name: postgres
+      port: 5432
+  selector:
+    service: postgres

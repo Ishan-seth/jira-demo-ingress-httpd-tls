@@ -1,0 +1,96 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: jira
+  namespace: devops
+  labels:
+    service: jira
+spec:
+  serviceName: jira
+  replicas: 1
+  updateStrategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      service: jira
+  template:
+    metadata:
+      labels:
+        service: jira
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: service
+                    operator: In
+                    values:
+                      - jira
+              topologyKey: "kubernetes.io/hostname"
+      initContainers:
+        - name: bootstrap
+          image: docker.io/busybox:1.31
+          args:
+            - /bin/sh
+            - -c
+            - until nc -zvw1 postgres-cluster 5432; do sleep 1; done
+      containers:
+        - name: jira
+          image: docker.io/alvistack/jira:8.8
+          resources:
+            requests:
+              cpu: 500m
+              memory: 3072M
+            limits:
+              memory: 3072M
+          ports:
+            - containerPort: 8005
+            - containerPort: 8080
+          env:
+            - name: JVM_MINIMUM_MEMORY
+              value: "1024m"
+            - name: JVM_MAXIMUM_MEMORY
+              value: "1024m"
+            - name: CATALINA_CONNECTOR_PROXYNAME 
+              value: "52.140.236.36"  # Update this to the JIRA Base URL / DNS Name / IP
+            - name: CATALINA_CONNECTOR_PROXYPORT
+              value: "80" # Update this 443 for HTTPS
+            - name: CATALINA_CONNECTOR_SCHEME
+              value: "http" # Update this to https for SSL
+            - name: CATALINA_CONNECTOR_SECURE
+              value: "false" # Set as "true" when https is used
+            - name: CATALINA_CONTEXT_PATH
+              value: "/" #Sub path prefix e.g. https://mybaseurl.com:8080/jira
+            - name: JVM_SUPPORT_RECOMMENDED_ARGS
+              value: >-
+                -Datlassian.plugins.enable.wait=300
+                -XX:+UnlockExperimentalVMOptions
+                -XX:+UseCGroupMemoryLimitForHeap
+                -XX:MaxRAMFraction=1
+            - name: TZ
+              value: "Asia/Hong_Kong"
+            - name: SESSION_TIMEOUT
+              value: "1440"
+          readinessProbe:
+            tcpSocket:
+              port: 8080
+            failureThreshold: 30
+          livenessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 300
+            failureThreshold: 30
+          volumeMounts:
+            - mountPath: /var/atlassian/application-data/jira
+              name: var-atlassian-application-data-jira
+            - mountPath: /var/atlassian/application-data/jira/shared
+              name: var-atlassian-application-data-jira-shared
+      volumes:
+        - name: var-atlassian-application-data-jira
+          persistentVolumeClaim:
+            claimName: var-atlassian-application-data-jira
+        - name: var-atlassian-application-data-jira-shared
+          persistentVolumeClaim:
+            claimName: var-atlassian-application-data-jira-shared

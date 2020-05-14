@@ -1,0 +1,25 @@
+---
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: nginx
+  namespace: devops
+  annotations:
+    # cert-manager.io/issuer: "letsencrypt"
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/affinity: "cookie"
+    nginx.ingress.kubernetes.io/proxy-body-size: "32m"
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "300"
+spec:
+  tls:
+    - secretName: jira-demo-ingress-tls   # Edit with your own details. To get the nginx controller up and running without https then comment out this line
+      hosts:   # To get the nginx controller up and running without https then comment out this line
+        - jira-demo.japaneast.cloudapp.azure.com # Edit with your own details. To get the nginx controller up and running without https then comment out this line
+  rules:
+    - host: jira-demo.japaneast.cloudapp.azure.com   # Edit with your own details.  To get the nginx controller up and running without https then change to:  host: *
+      http:
+        paths:
+          - backend:
+              serviceName: httpd-cluster
+              servicePort: 80
+

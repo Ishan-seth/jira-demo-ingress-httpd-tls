@@ -1,0 +1,19 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: jira
+  namespace: devops
+  annotations:
+    service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
+  labels:
+    service: jira
+spec:
+  ports:
+    - name: connector
+      port: 8080
+    - name: server
+      port: 8005
+  selector:
+    service: jira
+  clusterIP: None

@@ -12,11 +12,11 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-connect-timeout: "300"
 spec:
   tls:
-    - secretName: jira-demo-ingress-tls   # Edit with your own details. To get the nginx controller up and running without https then comment out this line
-      hosts:   # To get the nginx controller up and running without https then comment out this line
-        - jira-demo.japaneast.cloudapp.azure.com # Edit with your own details. To get the nginx controller up and running without https then comment out this line
+    #- secretName: jira-demo-ingress-tls   # Edit with your own details. To get the nginx controller up and running without https then comment out this line
+     # hosts:   # To get the nginx controller up and running without https then comment out this line
+        #- jira-demo.cloudapp.azure.com # Edit with your own details. To get the nginx controller up and running without https then comment out this line
   rules:
-    - host: jira-demo.japaneast.cloudapp.azure.com   # Edit with your own details.  To get the nginx controller up and running without https then change to:  host: *
+    - host: *   # Edit with your own details.  To get the nginx controller up and running without https then change to:  host: *
       http:
         paths:
           - backend:

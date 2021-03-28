@@ -1,0 +1,17 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+    name: "kstest-cd09"
+    labels:
+        app: "kstest-cd09"
+    annotations:
+        kubernetes.io/ingress.class: addon-http-application-routing
+spec:
+    rules:
+        - host: ks_test9646-kstest-cd09.fb06f14d01cb47d5b9e7.westus.aksapp.io
+          http:
+            paths:
+            - path: /
+              backend:
+                serviceName: "kstest-cd09"
+                servicePort: 8080
